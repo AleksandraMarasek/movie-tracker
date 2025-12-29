@@ -1,0 +1,419 @@
+:root {
+  --bg: #07070b;
+  --text: rgba(255, 255, 255, 0.92);
+  --muted: rgba(255, 255, 255, 0.62);
+
+  --pink: #f2a4f5;
+
+  --surface: rgba(255, 255, 255, 0.03);
+  --stroke: rgba(255, 255, 255, 0.1);
+  --strokeSoft: rgba(255, 255, 255, 0.06);
+
+  --shadow: 0 28px 80px rgba(0, 0, 0, 0.7);
+
+  --bgGlow1: rgba(242, 164, 245, 0.14);
+  --bgGlow2: rgba(242, 164, 245, 0.1);
+
+  --leftGlow: rgba(242, 164, 245, 0.22);
+  --leftGlowStrong: rgba(242, 164, 245, 0.28);
+  --leftGlowSoft: rgba(242, 164, 245, 0.18);
+
+  --logoBorder: rgba(255, 255, 255, 0.12);
+  --logoHi: rgba(255, 255, 255, 0.18);
+  --logoGradA: rgba(242, 164, 245, 0.85);
+  --logoGradB: rgba(255, 255, 255, 0.06);
+  --logoShadowA: rgba(242, 164, 245, 0.16);
+  --logoShadowInset: rgba(0, 0, 0, 0.35);
+
+  --dot: rgba(242, 164, 245, 0.85);
+  --dotRing: rgba(242, 164, 245, 0.12);
+
+  --rightGradA: rgba(0, 0, 0, 0.18);
+  --rightGradB: rgba(0, 0, 0, 0.1);
+
+  --inputBg: rgba(255, 255, 255, 0.04);
+  --inputBgHover: rgba(255, 255, 255, 0.05);
+  --inputBorder: rgba(255, 255, 255, 0.1);
+  --inputBorderHover: rgba(255, 255, 255, 0.14);
+  --placeholder: rgba(255, 255, 255, 0.36);
+  --focusBorder: rgba(242, 164, 245, 0.55);
+  --focusRing: rgba(242, 164, 245, 0.14);
+
+  --link: rgba(255, 255, 255, 0.78);
+  --linkHover: rgba(255, 255, 255, 0.92);
+  --linkUnderline: rgba(242, 164, 245, 0.65);
+
+  --btnText: rgba(0, 0, 0, 0.88);
+  --btnGradA: rgba(242, 164, 245, 0.95);
+  --btnGradB: rgba(255, 255, 255, 0.7);
+  --btnShadow: rgba(242, 164, 245, 0.14);
+  --btnShadowHover: rgba(242, 164, 245, 0.18);
+
+  --hint: rgba(255, 255, 255, 0.74);
+  --error: rgba(255, 107, 154, 0.92);
+  --errorBorder: rgba(255, 107, 154, 0.55);
+  --errorRing: rgba(255, 107, 154, 0.18);
+
+  --radius: 28px;
+  --radiusSm: 16px;
+  --outline: rgba(242, 164, 245, 0.75);
+  --foot: rgba(255, 255, 255, 0.66);
+
+  --ff: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--ff);
+  color: var(--text);
+  background: var(--bg);
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--outline);
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+      900px 560px at 15% 25%,
+      var(--bgGlow1),
+      transparent 60%
+    ),
+    radial-gradient(800px 520px at 85% 75%, var(--bgGlow2), transparent 62%),
+    linear-gradient(180deg, #07070b 0%, #05050a 55%, #040409 100%);
+}
+
+.page {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 30px 16px;
+}
+
+.panel {
+  width: min(980px, 96vw);
+  min-height: 520px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--stroke);
+  box-shadow: var(--shadow);
+
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.panel__left {
+  position: relative;
+  padding: 34px;
+  border-right: 1px solid var(--strokeSoft);
+  background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.02)
+    ),
+    radial-gradient(700px 420px at 30% 25%, var(--leftGlow), transparent 62%);
+}
+
+.panel__left::before {
+  content: '';
+  position: absolute;
+  inset: -120px auto auto -120px;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(
+    circle at 40% 40%,
+    var(--leftGlowStrong),
+    transparent 65%
+  );
+  filter: blur(18px);
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.panel__left::after {
+  content: '';
+  position: absolute;
+  inset: auto -140px -140px auto;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(
+    circle at 55% 45%,
+    var(--leftGlowSoft),
+    transparent 66%
+  );
+  filter: blur(22px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.brand {
+  position: relative;
+  display: grid;
+  gap: 18px;
+}
+
+.brand__logo {
+  width: 92px;
+  height: 92px;
+  border-radius: 26px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+
+  border: 1px solid var(--logoBorder);
+  background: radial-gradient(circle at 30% 30%, var(--logoHi), transparent 45%),
+    linear-gradient(135deg, var(--logoGradA), var(--logoGradB));
+  box-shadow: 0 18px 60px var(--logoShadowA),
+    0 0 0 1px var(--logoShadowInset) inset;
+}
+
+.brand__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.brand__logoMark {
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.18em;
+  opacity: 0.9;
+}
+
+.brand__title {
+  margin: 0;
+  font-size: 26px;
+  letter-spacing: 0.2px;
+}
+
+.brand__subtitle {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+  max-width: 40ch;
+}
+
+.perks {
+  position: relative;
+  list-style: none;
+  padding: 0;
+  margin: 26px 0 0;
+  display: grid;
+  gap: 10px;
+}
+
+.perks__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 14px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--dot);
+  box-shadow: 0 0 0 4px var(--dotRing);
+  flex: 0 0 auto;
+}
+
+.panel__right {
+  padding: 34px;
+  background: linear-gradient(180deg, var(--rightGradA), var(--rightGradB));
+}
+
+.formHeader {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.formHeader__title {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.2px;
+}
+
+.formHeader__subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.field {
+  position: relative;
+  display: grid;
+  gap: 8px;
+}
+
+.field__label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.field__input {
+  width: 100%;
+  padding: 14px 14px;
+  border-radius: var(--radiusSm);
+  border: 1px solid var(--inputBorder);
+  background: var(--inputBg);
+  color: var(--text);
+  font-size: 14px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+
+.field__input::placeholder {
+  color: var(--placeholder);
+}
+
+.field__input:hover {
+  border-color: var(--inputBorderHover);
+  background: var(--inputBgHover);
+}
+
+.field__input:focus {
+  border-color: var(--focusBorder);
+  box-shadow: 0 0 0 4px var(--focusRing);
+  background: var(--inputBgHover);
+  outline: none;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+}
+
+.check__box {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--pink);
+}
+
+.check__text {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.link {
+  font-size: 12px;
+  color: var(--link);
+  transition: color 0.15s ease;
+}
+
+.link:hover {
+  color: var(--linkHover);
+  text-decoration: underline;
+  text-decoration-color: var(--linkUnderline);
+  text-underline-offset: 3px;
+}
+
+.btn {
+  margin-top: 8px;
+  width: 100%;
+  border: 0;
+  border-radius: var(--radiusSm);
+  padding: 14px 16px;
+  font-weight: 750;
+  color: var(--btnText);
+  background: linear-gradient(135deg, var(--btnGradA), var(--btnGradB));
+  box-shadow: 0 18px 60px var(--btnShadow);
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.02);
+  box-shadow: 0 20px 70px var(--btnShadowHover);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.foot {
+  margin: 2px 0 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--foot);
+}
+
+.field__hint {
+  display: none;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--hint);
+}
+
+.form:has(:invalid) .field__input:invalid ~ .field__hint,
+.field__input:focus:invalid ~ .field__hint {
+  display: block;
+  color: var(--error);
+}
+
+.field__input:invalid {
+  border-color: var(--errorBorder);
+}
+
+.field__input:invalid:focus {
+  box-shadow: 0 0 0 4px var(--errorRing);
+}
+
+@media (max-width: 860px) {
+  .panel {
+    grid-template-columns: 1fr;
+    min-height: unset;
+  }
+
+  .panel__left {
+    border-right: 0;
+    border-bottom: 1px solid var(--strokeSoft);
+  }
+}

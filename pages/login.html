@@ -1,1 +1,95 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Logowanie</title>
+    <link rel="stylesheet" href="../css/login.css" />
+  </head>
+  <body>
+    <div class="bg" aria-hidden="true"></div>
 
+    <main class="page">
+      <section class="panel" aria-label="Logowanie">
+        <aside class="panel__left" aria-label="Branding">
+          <div class="brand">
+            <div class="brand__logo" aria-hidden="true">
+              <img src="../js/data/img/logo.png" alt="" />
+              <span class="brand__logoMark">LOGO</span>
+            </div>
+
+            <div class="brand__text">
+              <h1 class="brand__title">Witaj z powrotem</h1>
+              <p class="brand__subtitle">Zaloguj się, aby przejść do panelu.</p>
+            </div>
+          </div>
+
+          <ul class="perks" aria-label="Korzyści">
+            <li class="perks__item">
+              <span class="dot" aria-hidden="true"></span>
+              Bezpieczne logowanie
+            </li>
+            <li class="perks__item">
+              <span class="dot" aria-hidden="true"></span>
+              Szybki dostęp do danych
+            </li>
+            <li class="perks__item">
+              <span class="dot" aria-hidden="true"></span>
+              Subtelny, nowoczesny wygląd
+            </li>
+          </ul>
+        </aside>
+
+        <div class="panel__right">
+          <header class="formHeader">
+            <h2 class="formHeader__title">Logowanie</h2>
+            <p class="formHeader__subtitle">
+              Wpisz email i hasło, aby kontynuować.
+            </p>
+          </header>
+
+          <form class="form" action="#" method="post" autocomplete="on">
+            <label class="field">
+              <span class="field__label">Email</span>
+              <input
+                class="field__input"
+                type="email"
+                name="email"
+                placeholder="np. diva@gmail.com"
+                required
+              />
+              <span class="field__hint">Podaj adres e-mail</span>
+            </label>
+
+            <label class="field">
+              <span class="field__label">Hasło</span>
+              <input
+                class="field__input"
+                type="password"
+                name="password"
+                placeholder="••••••••"
+                required
+              />
+              <span class="field__hint">Hasło jest wymagane</span>
+            </label>
+
+            <div class="row">
+              <label class="check">
+                <input class="check__box" type="checkbox" name="remember" />
+                <span class="check__text">Zapamiętaj mnie</span>
+              </label>
+
+              <a class="link" href="#">Nie pamiętasz hasła?</a>
+            </div>
+
+            <button class="btn" type="submit">Zaloguj</button>
+
+            <p class="foot">
+              Nie masz konta? <a class="link" href="#">Zarejestruj się</a>
+            </p>
+          </form>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
