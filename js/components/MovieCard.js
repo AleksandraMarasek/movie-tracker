@@ -29,8 +29,9 @@ class MovieCard extends HTMLElement {
 
         .heart {
           cursor: pointer;
-          font-size: 20px;
+          font-size: 22px;
           color: #888;
+          user-select: none;
         }
 
         .heart.active {
@@ -51,8 +52,11 @@ class MovieCard extends HTMLElement {
     setupEvents() {
         const heart = this.shadowRoot.querySelector('.heart');
 
-        heart.addEventListener('click', () => {
+        heart.addEventListener('click', (e) => {
+            e.stopPropagation();
+
             heart.classList.toggle('active');
+            heart.textContent = heart.classList.contains('active') ? '♥' : '♡';
 
             this.dispatchEvent(
                 new CustomEvent('toggle-favorite', {

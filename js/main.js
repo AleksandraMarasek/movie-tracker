@@ -1,20 +1,82 @@
-import { movies } from './data/movies.mock.js';
+import {
+    getHomeShows,
+    searchShows,
+    getShowDetails,
+    getShowEpisodes,
+    getShowCast,
+} from './services/movieService.js';
 import './components/MovieCard.js';
 
+const form = document.querySelector('.search-form');
+const input = document.querySelector('#search-input');
 const grid = document.getElementById('movies-grid');
 
-movies.forEach((movie) => {
-    const card = document.createElement('movie-card');
+function renderCards(items) {
+    grid.innerHTML = '';
 
-    card.setAttribute('movie-id', movie.id);
-    card.setAttribute('title', movie.title);
-    card.setAttribute('rating', movie.rating);
-    card.setAttribute('description', movie.description);
-    card.setAttribute('poster', movie.poster);
+    items.forEach((item) => {
+        const card = document.createElement('movie-card');
+        card.setAttribute('movie-id', item.id);
+        card.setAttribute('title', item.title);
+        card.setAttribute('poster', item.poster);
+        card.setAttribute('rating', item.rating);
+        card.setAttribute('description', item.description);
+        grid.appendChild(card);
+    });
+}
 
-    card.addEventListener('toggle-favorite', (e) => {
-        console.log('Ulubiony film ID:', e.detail.movieId);
+document.addEventListener('DOMContentLoaded', async () => {
+    const items = await getHomeShows(50);
+    renderCards(items);
+});
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const items = await searchShows(input.value);
+    renderCards(items);
+});
+
+grid.addEventListener('toggle-favorite', (e) => {
+    console.log('FAVORITE TOGGLE:', e.detail.movieId);
+});
+
+grid.addEventListener('open-details', async (e) => {
+    const id = e.detail.movieId;
+
+    const [details, episodes, cast] = await Promise.all([
+        getShowDetails(id),
+        getShowEpisodes(id),
+        getShowCast(id),
+    ]);
+
+    console.log('DETAILS:', details);
+    console.log(
+        'EPISODES COUNT:',
+        Array.isArray(episodes) ? episodes.length : 0
+    );
+    console.log(
+        'CAST (first 5):',
+        (cast || []).slice(0, 5).map((c) => c.person?.name)
+    );
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const header = document.getElementById('myHeader');
+    const page = document.getElementById('page');
+    const openMenuButton = document.getElementById('openmenu');
+
+    window.addEventListener('scroll', () => {
+        page.classList.remove('menuopen');
+
+        if (window.scrollY >= 100) {
+            header.classList.add('sticky');
+        } else {
+            header.classList.remove('sticky');
+        }
     });
 
-    grid.appendChild(card);
+    openMenuButton.addEventListener('click', () => {
+        header.classList.remove('sticky');
+        page.classList.add('menuopen');
+    });
 });
