@@ -26,16 +26,15 @@
 
           <ul class="perks" aria-label="Korzyści">
             <li class="perks__item">
-              <span class="dot" aria-hidden="true"></span>
-              Bezpieczne logowanie
+              <span class="dot" aria-hidden="true"></span>Bezpieczne logowanie
             </li>
             <li class="perks__item">
-              <span class="dot" aria-hidden="true"></span>
-              Szybki dostęp do danych
+              <span class="dot" aria-hidden="true"></span>Szybki dostęp do
+              danych
             </li>
             <li class="perks__item">
-              <span class="dot" aria-hidden="true"></span>
-              Subtelny, nowoczesny wygląd
+              <span class="dot" aria-hidden="true"></span>Subtelny, nowoczesny
+              wygląd
             </li>
           </ul>
         </aside>
@@ -48,7 +47,13 @@
             </p>
           </header>
 
-          <form class="form" action="#" method="post" autocomplete="on">
+          <form
+            class="form"
+            action="#"
+            method="post"
+            autocomplete="on"
+            novalidate
+          >
             <label class="field">
               <span class="field__label">Email</span>
               <input
@@ -58,7 +63,10 @@
                 placeholder="np. diva@gmail.com"
                 required
               />
-              <span class="field__hint">Podaj adres e-mail</span>
+              <span
+                class="field__hint"
+                data-default="Podaj adres e-mail"
+              ></span>
             </label>
 
             <label class="field">
@@ -70,12 +78,20 @@
                 placeholder="••••••••"
                 required
               />
-              <span class="field__hint">Hasło jest wymagane</span>
+              <span
+                class="field__hint"
+                data-default="Hasło jest wymagane"
+              ></span>
             </label>
 
             <div class="row">
               <label class="check">
-                <input class="check__box" type="checkbox" name="remember" />
+                <input
+                  class="check__box"
+                  type="checkbox"
+                  name="remember"
+                  checked
+                />
                 <span class="check__text">Zapamiętaj mnie</span>
               </label>
 
@@ -91,5 +107,9 @@
         </div>
       </section>
     </main>
+
+    <script src="../js/storage/user.js"></script>
+    <script src="../js/services/authService.js"></script>
+    <script src="../js/pages/login.js"></script>
   </body>
 </html>

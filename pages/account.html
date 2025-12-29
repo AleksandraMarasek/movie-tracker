@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Konto</title>
+    <link rel="stylesheet" href="../css/account.css" />
+  </head>
+  <body>
+    <div class="bg" aria-hidden="true"></div>
+
+    <main class="shell">
+      <header class="topbar">
+        <div class="topbar__left">
+          <img class="topbar__logo" src="../js/data/img/logo.png" alt="Logo" />
+          <div class="topbar__text">
+            <div class="topbar__title">Konto</div>
+            <div class="topbar__sub">Profil użytkownika</div>
+          </div>
+        </div>
+
+        <div class="topbar__right">
+          <a
+            class="actionBtn"
+            href="../index.html"
+            aria-label="Wróć na stronę główną"
+          >
+            <span class="actionBtn__icon" aria-hidden="true">⌂</span>
+            <span class="actionBtn__text">Home</span>
+          </a>
+
+          <button
+            class="actionBtn actionBtn--danger"
+            type="button"
+            data-logout
+            aria-label="Wyloguj"
+          >
+            <span class="actionBtn__icon" aria-hidden="true">⎋</span>
+            <span class="actionBtn__text">Wyloguj</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="grid">
+        <section class="card card--profile">
+          <div class="profile">
+            <div class="profile__avatarWrap">
+              <img class="avatar" data-avatar alt="Zdjęcie profilowe" />
+              <button class="avatarBtn" type="button" data-open-avatar>
+                Zmień zdjęcie
+              </button>
+            </div>
+
+            <div class="profile__info">
+              <h1 class="profile__name" data-user-name>Użytkownik</h1>
+
+              <div class="meta">
+                <div class="meta__row">
+                  <span class="chip">email</span>
+                  <span class="meta__value" data-user-email>—</span>
+                </div>
+
+                <div class="meta__row">
+                  <span class="chip">konto od</span>
+                  <span class="meta__value" data-user-since>—</span>
+                </div>
+              </div>
+
+              <div class="mini">
+                <div class="mini__item">
+                  <div class="mini__num" id="favCount">—</div>
+                  <div class="mini__label">Ulubione</div>
+                </div>
+                <div class="mini__item">
+                  <div class="mini__num" id="watchCount">—</div>
+                  <div class="mini__label">Watchlist</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card__head">
+            <h2 class="card__title">Informacje</h2>
+            <p class="card__sub">Podstawowe dane sesji.</p>
+          </div>
+
+          <div class="settings">
+            <div class="setting">
+              <div class="setting__label">Zalogowano</div>
+              <div class="setting__value" data-last-login>—</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <p class="hint">
+              Avatar zapisuje się w localStorage per email, więc odświeżenie
+              strony go nie resetuje.
+            </p>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <div
+      class="modal"
+      hidden
+      aria-hidden="true"
+      role="dialog"
+      aria-label="Wybierz zdjęcie profilowe"
+      data-modal
+    >
+      <div class="modal__backdrop" data-close></div>
+
+      <div class="modal__panel" role="document">
+        <div class="modal__head">
+          <div>
+            <div class="modal__title">Wybierz zdjęcie profilowe</div>
+            <div class="modal__sub">Kliknij, aby ustawić</div>
+          </div>
+          <button class="iconBtn" type="button" aria-label="Zamknij" data-close>
+            ✕
+          </button>
+        </div>
+
+        <div class="avatars" data-avatars></div>
+      </div>
+    </div>
+
+    <script src="../js/storage/user.js"></script>
+    <script src="../js/services/authService.js"></script>
+    <script src="../js/pages/account.js"></script>
+  </body>
+</html>

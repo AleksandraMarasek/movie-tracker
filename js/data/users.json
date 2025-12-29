@@ -1,0 +1,14 @@
+[
+  {
+    "email": "diva@gmail.com",
+    "password": "1234",
+    "name": "Diva",
+    "kontoOd": "2024-01-12"
+  },
+  {
+    "email": "admin@gmail.com",
+    "password": "admin",
+    "name": "Admin",
+    "kontoOd": "2023-09-01"
+  }
+]
