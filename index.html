@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie-Tracker</title>
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+
+  <body class="light-mode">
+    <header class="main-header">
+      <div class="logo">
+        <h1>Movie<span>App</span></h1>
+      </div>
+
+      <nav class="main-nav">
+        <ul>
+          <li><a href="index.html" class="active">Strona Główna</a></li>
+          <li><a href="pages/favorites.html">Ulubione</a></li>
+          <li><a href="pages/kanban.html">Watchlist</a></li>
+          <li><a href="pages/account.html">Mój Profil</a></li>
+          <li><a href="pages/login.html" class="btn-login">Zaloguj</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="search-section">
+        <div class="container">
+          <h2>Znajdź swój następny film</h2>
+
+          <form class="search-form">
+            <input
+              type="text"
+              placeholder="Szukaj po tytule..."
+              id="search-input"
+            />
+
+            <div class="filters">
+              <select id="genre-filter">
+                <option value="">Wszystkie gatunki</option>
+                <option value="action">Akcja</option>
+                <option value="drama">Dramat</option>
+                <option value="sci-fi">Sci-Fi</option>
+              </select>
+
+              <select id="year-filter">
+                <option value="">Rok produkcji</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="older">Starsze</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn-search">Filtruj</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="movies-container">
+        <div class="container">
+          <h3 class="section-title">Wyniki wyszukiwania</h3>
+
+          <div class="movies-grid" id="movies-grid"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="main-footer">
+      <p>&copy; Movie-Tracker Project</p>
+    </footer>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>

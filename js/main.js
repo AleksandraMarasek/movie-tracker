@@ -1,20 +1,23 @@
-import { movies } from './data/movies.mock.js';
+import { searchMovies } from './services/movieService.js';
 import './components/MovieCard.js';
 
+const form = document.querySelector('.search-form');
+const input = document.querySelector('#search-input');
 const grid = document.getElementById('movies-grid');
 
-movies.forEach((movie) => {
-    const card = document.createElement('movie-card');
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    grid.innerHTML = '';
 
-    card.setAttribute('movie-id', movie.id);
-    card.setAttribute('title', movie.title);
-    card.setAttribute('rating', movie.rating);
-    card.setAttribute('description', movie.description);
-    card.setAttribute('poster', movie.poster);
+    const movies = await searchMovies(input.value);
 
-    card.addEventListener('toggle-favorite', (e) => {
-        console.log('Ulubiony film ID:', e.detail.movieId);
+    movies.forEach((movie) => {
+        const card = document.createElement('movie-card');
+
+        card.setAttribute('movie-id', movie.imdbID);
+        card.setAttribute('title', movie.Title);
+        card.setAttribute('poster', movie.Poster);
+
+        grid.appendChild(card);
     });
-
-    grid.appendChild(card);
 });
