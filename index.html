@@ -8,68 +8,75 @@
   </head>
 
   <body class="light-mode">
-    <header class="main-header">
-      <div class="logo">
-        <h1>Movie<span>App</span></h1>
+    <header id="myHeader" class="main-header">
+      <div class="brand-center">
+        <img
+          src="/js/data/img/logo.png"
+          alt="Movie Tracker logo"
+          class="brand-logo"
+        />
       </div>
 
       <nav class="main-nav">
-        <ul>
-          <li><a href="index.html" class="active">Strona Główna</a></li>
-          <li><a href="pages/favorites.html">Ulubione</a></li>
-          <li><a href="pages/kanban.html">Watchlist</a></li>
-          <li><a href="pages/account.html">Mój Profil</a></li>
-          <li><a href="pages/login.html" class="btn-login">Zaloguj</a></li>
-        </ul>
+        <a href="index.html">Home</a>
+        <a href="pages/favorites.html">Ulubione</a>
+        <a href="pages/kanban.html">Watchlist</a>
+        <a href="pages/account.html">Profil</a>
+
+        <button id="openmenu">
+          <span></span>
+          <span></span>
+        </button>
       </nav>
     </header>
 
-    <main>
-      <section class="search-section">
-        <div class="container">
-          <h2>Znajdź swój następny film</h2>
+    <div id="page">
+      <main>
+        <section class="search-section">
+          <div class="container">
+            <h2>Znajdź swój następny film</h2>
 
-          <form class="search-form">
-            <input
-              type="text"
-              placeholder="Szukaj po tytule..."
-              id="search-input"
-            />
+            <form class="search-form">
+              <input
+                type="text"
+                placeholder="Szukaj po tytule..."
+                id="search-input"
+              />
 
-            <div class="filters">
-              <select id="genre-filter">
-                <option value="">Wszystkie gatunki</option>
-                <option value="action">Akcja</option>
-                <option value="drama">Dramat</option>
-                <option value="sci-fi">Sci-Fi</option>
-              </select>
+              <div class="filters">
+                <select id="genre-filter">
+                  <option value="">Wszystkie gatunki</option>
+                  <option value="action">Akcja</option>
+                  <option value="drama">Dramat</option>
+                  <option value="sci-fi">Sci-Fi</option>
+                </select>
 
-              <select id="year-filter">
-                <option value="">Rok produkcji</option>
-                <option value="2024">2024</option>
-                <option value="2023">2023</option>
-                <option value="older">Starsze</option>
-              </select>
-            </div>
+                <select id="year-filter">
+                  <option value="">Rok produkcji</option>
+                  <option value="2024">2024</option>
+                  <option value="2023">2023</option>
+                  <option value="older">Starsze</option>
+                </select>
+              </div>
 
-            <button type="submit" class="btn-search">Filtruj</button>
-          </form>
-        </div>
-      </section>
+              <button type="submit" class="btn-search">Filtruj</button>
+            </form>
+          </div>
+        </section>
 
-      <section class="movies-container">
-        <div class="container">
-          <h3 class="section-title">Wyniki wyszukiwania</h3>
+        <section class="movies-container">
+          <div class="container">
+            <h3 class="section-title">Wyniki wyszukiwania</h3>
 
-          <div class="movies-grid" id="movies-grid"></div>
-        </div>
-      </section>
-    </main>
+            <div class="movies-grid" id="movies-grid"></div>
+          </div>
+        </section>
+      </main>
 
-    <footer class="main-footer">
-      <p>&copy; Movie-Tracker Project</p>
-    </footer>
-
+      <footer class="main-footer">
+        <p>&copy; Movie-Tracker Project</p>
+      </footer>
+    </div>
     <script type="module" src="js/main.js"></script>
   </body>
 </html>

@@ -59,3 +59,24 @@ grid.addEventListener('open-details', async (e) => {
         (cast || []).slice(0, 5).map((c) => c.person?.name)
     );
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const header = document.getElementById('myHeader');
+    const page = document.getElementById('page');
+    const openMenuButton = document.getElementById('openmenu');
+
+    window.addEventListener('scroll', () => {
+        page.classList.remove('menuopen');
+
+        if (window.scrollY >= 100) {
+            header.classList.add('sticky');
+        } else {
+            header.classList.remove('sticky');
+        }
+    });
+
+    openMenuButton.addEventListener('click', () => {
+        header.classList.remove('sticky');
+        page.classList.add('menuopen');
+    });
+});
