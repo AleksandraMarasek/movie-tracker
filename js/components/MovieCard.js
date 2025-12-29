@@ -50,17 +50,27 @@ class MovieCard extends HTMLElement {
 
     setupEvents() {
         const heart = this.shadowRoot.querySelector('.heart');
+        const card = this.shadowRoot.querySelector('.card');
 
-        heart.addEventListener('click', () => {
+        heart.addEventListener('click', (ev) => {
+            ev.stopPropagation();
             heart.classList.toggle('active');
 
             this.dispatchEvent(
                 new CustomEvent('toggle-favorite', {
                     bubbles: true,
                     composed: true,
-                    detail: {
-                        movieId: this.getAttribute('movie-id'),
-                    },
+                    detail: { movieId: this.getAttribute('movie-id') },
+                })
+            );
+        });
+
+        card.addEventListener('click', () => {
+            this.dispatchEvent(
+                new CustomEvent('open-details', {
+                    bubbles: true,
+                    composed: true,
+                    detail: { movieId: this.getAttribute('movie-id') },
                 })
             );
         });

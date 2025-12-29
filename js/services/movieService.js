@@ -1,24 +1,88 @@
-import { loadConfig } from '../api/omdb.js';
+import { tvmazeGet } from '../api/tvmaze.js';
 
-const HOME_IDS = [
-    'tt0111161', //Shawshank
-    'tt0068646', //The Godfather
-    'tt0468569', //The Dark Knight
-    'tt0109830', //Forrest Gump
-    'tt0133093', //Matrix
-    'tt1375666', //Inception
-];
-
-async function getById(imdbID, config) {
-    const url = `${config.OMDB_BASE_URL}?apikey=${config.OMDB_API_KEY}&i=${imdbID}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if (data.Response === 'False') return null;
-    return data;
+function stripHtml(html) {
+    if (!html) return '';
+    return html
+        .replace(/<[^>]*>/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
 }
 
-export async function getHomeMovies() {
-    const config = await loadConfig();
-    const movies = await Promise.all(HOME_IDS.map((id) => getById(id, config)));
-    return movies.filter(Boolean);
+function toCardModel(show) {
+    const poster = show?.image?.medium || show?.image?.original || 'N/A';
+    const rating = show?.rating?.average ?? '—';
+    const description = stripHtml(show?.summary) || 'Brak opisu.';
+
+    return {
+        id: String(show.id),
+        title: show.name,
+        poster,
+        rating: String(rating),
+        description:
+            description.length > 140
+                ? description.slice(0, 140) + '…'
+                : description,
+    };
+}
+
+export async function getHomeShows(limit = 50) {
+    const PAGES_TO_SAMPLE = 3;
+    const MAX_PAGE = 200;
+
+    const pages = new Set();
+    while (pages.size < PAGES_TO_SAMPLE)
+        pages.add(Math.floor(Math.random() * MAX_PAGE));
+
+    const all = [];
+    for (const p of pages) {
+        const pageShows = await tvmazeGet(`/shows?page=${p}`);
+        if (Array.isArray(pageShows)) all.push(...pageShows);
+    }
+
+    all.sort((a, b) => {
+        const aw = a.weight ?? 0;
+        const bw = b.weight ?? 0;
+        if (bw !== aw) return bw - aw;
+        const ar = a.rating?.average ?? 0;
+        const br = b.rating?.average ?? 0;
+        return br - ar;
+    });
+
+    const picked = [];
+    const seen = new Set();
+
+    for (const s of all) {
+        if (!s?.id || seen.has(s.id)) continue;
+        if (!s?.image?.medium && !s?.image?.original) continue;
+
+        seen.add(s.id);
+        picked.push(toCardModel(s));
+        if (picked.length >= limit) break;
+    }
+
+    return picked;
+}
+
+export async function searchShows(query) {
+    const q = query.trim();
+    if (!q) return [];
+
+    const data = await tvmazeGet(`/search/shows?q=${encodeURIComponent(q)}`);
+    if (!Array.isArray(data)) return [];
+
+    return data
+        .map((x) => x.show)
+        .filter(Boolean)
+        .filter((s) => s?.image?.medium || s?.image?.original)
+        .map(toCardModel);
+}
+
+export async function getShowDetails(id) {
+    return tvmazeGet(`/shows/${id}`);
+}
+export async function getShowEpisodes(id) {
+    return tvmazeGet(`/shows/${id}/episodes`);
+}
+export async function getShowCast(id) {
+    return tvmazeGet(`/shows/${id}/cast`);
 }
