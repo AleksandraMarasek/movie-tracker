@@ -6,6 +6,7 @@ import {
     getShowCast,
 } from './services/movieService.js';
 import './components/MovieCard.js';
+import './components/MovieDetails.js';
 
 const form = document.querySelector('.search-form');
 const input = document.querySelector('#search-input');
@@ -43,21 +44,15 @@ grid.addEventListener('toggle-favorite', (e) => {
 grid.addEventListener('open-details', async (e) => {
     const id = e.detail.movieId;
 
-    const [details, episodes, cast] = await Promise.all([
-        getShowDetails(id),
-        getShowEpisodes(id),
-        getShowCast(id),
-    ]);
+    try {
+        const details = await getShowDetails(id);
 
-    console.log('DETAILS:', details);
-    console.log(
-        'EPISODES COUNT:',
-        Array.isArray(episodes) ? episodes.length : 0
-    );
-    console.log(
-        'CAST (first 5):',
-        (cast || []).slice(0, 5).map((c) => c.person?.name)
-    );
+        const detailsElement = document.createElement('movie-details');
+        detailsElement.data = details;
+        document.body.appendChild(detailsElement);
+    } catch (error) {
+        console.error('Błąd pobierania danych:', error);
+    }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
