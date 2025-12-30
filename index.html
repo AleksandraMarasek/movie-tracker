@@ -8,28 +8,7 @@
   </head>
 
   <body class="light-mode">
-    <header id="myHeader" class="main-header">
-      <div class="brand-center">
-        <img
-          src="/js/data/img/logo.png"
-          alt="Movie Tracker logo"
-          class="brand-logo"
-        />
-      </div>
-
-      <nav class="main-nav">
-        <a href="index.html">Home</a>
-        <a href="pages/favorites.html">Ulubione</a>
-        <a href="pages/watchlist.html">Watchlist</a>
-        <a href="pages/account.html">Profil</a>
-
-        <button id="openmenu">
-          <span></span>
-          <span></span>
-        </button>
-      </nav>
-    </header>
-
+    <div id="header-container"></div>
     <div id="page">
       <main>
         <section class="search-section">
@@ -59,7 +38,9 @@
                 </select>
               </div>
 
-              <button type="submit" class="btn-search">Filtruj</button>
+              <button type="submit" class="btn-search animated-btn">
+                Filtruj
+              </button>
             </form>
           </div>
         </section>

@@ -18,16 +18,6 @@ function renderCards(items) {
     grid.innerHTML = '';
 
     renderMovies(grid, items);
-
-    // items.forEach((item) => {
-    //     const card = document.createElement('movie-card');
-    //     card.setAttribute('movie-id', item.id);
-    //     card.setAttribute('title', item.title);
-    //     card.setAttribute('poster', item.poster);
-    //     card.setAttribute('rating', item.rating);
-    //     card.setAttribute('description', item.description);
-    //     grid.appendChild(card);
-    // });
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -59,14 +49,20 @@ grid.addEventListener('open-details', async (e) => {
     }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    const container = document.getElementById('header-container');
+    if (!container) return;
+
+    const response = await fetch('/header.html');
+    const html = await response.text();
+    container.innerHTML = html;
+
     const header = document.getElementById('myHeader');
     const page = document.getElementById('page');
     const openMenuButton = document.getElementById('openmenu');
 
     window.addEventListener('scroll', () => {
         page.classList.remove('menuopen');
-
         if (window.scrollY >= 100) {
             header.classList.add('sticky');
         } else {
@@ -76,6 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     openMenuButton.addEventListener('click', () => {
         header.classList.remove('sticky');
-        page.classList.add('menuopen');
+        page.classList.toggle('menuopen');
     });
 });

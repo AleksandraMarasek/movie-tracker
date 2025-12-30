@@ -169,19 +169,50 @@ header.sticky #openmenu span {
   border-radius: 8px;
 }
 
-.btn-search {
-  background: var(--accent-color);
-  border: none;
-  padding: 10px 22px;
+.btn-search.animated-btn {
+  position: relative;
+  padding: 8px 15px;
   border-radius: 999px;
-  color: white;
-  font-weight: 600;
+  border: 3px solid var(--accent-color);
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  background: #000;
+  overflow: hidden;
   cursor: pointer;
-  transition: 0.3s ease;
+  z-index: 0;
 }
 
-.btn-search:hover {
-  transform: scale(1.05);
+.btn-search.animated-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 255, 255, 0.4),
+      transparent 40%
+    ),
+    linear-gradient(to right, var(--accent-color) 0%, var(--accent-color) 100%);
+  transform: translateX(110%);
+  filter: blur(6px);
+  z-index: -1;
+  animation: eclipse 3s linear infinite;
+  border-radius: 999px;
+}
+
+@keyframes eclipse {
+  0% {
+    transform: translateX(110%);
+  }
+  100% {
+    transform: translateX(-110%);
+  }
+}
+
+.btn-search.animated-btn:hover {
+  color: #000;
+  background-color: var(--accent-color);
 }
 
 .movies-container {
@@ -231,6 +262,82 @@ header.sticky #openmenu span {
   font-size: 14px;
   opacity: 0.6;
 }
+
 .hidden {
   display: none;
+}
+
+.favorites-page {
+  margin-top: 260px;
+}
+
+.favorites-title-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 40px;
+}
+
+.favorites-title-container .container {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.favorites-title-container .content {
+  width: 100%;
+  max-width: 100%;
+  padding: 1rem 20px;
+  border: 2px solid rgba(242, 164, 245, 0.6);
+  border-radius: 12px;
+  color: var(--text-color);
+  background: rgba(0, 0, 0, 0.2);
+  text-align: left;
+  z-index: 1;
+}
+
+.favorites-title-container .content p {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.favorites-title-container .blob {
+  position: absolute;
+  inset: 0;
+  opacity: 0.4;
+  width: 100%;
+  aspect-ratio: 1/1;
+  animation: animate 10s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite
+    alternate forwards;
+  filter: blur(40px);
+  z-index: -1;
+  background: linear-gradient(
+    47deg,
+    rgba(242, 164, 245, 1) 21%,
+    rgb(208, 189, 255) 67%,
+    rgb(80, 69, 206) 81%
+  );
+}
+
+@keyframes animate {
+  0% {
+    translate: 40% -25%;
+    border-radius: 60% 40% 30% 70% / 100% 85% 92% 74%;
+  }
+  50% {
+    translate: 0% 13%;
+    border-radius: 20% 71% 47% 70% / 81% 15% 22% 54%;
+    rotate: 41deg;
+    scale: 1.15;
+  }
+  100% {
+    translate: -45% 39%;
+    border-radius: 100% 75% 92% 74% / 60% 80% 30% 70%;
+    rotate: -60deg;
+    scale: 1.05;
+  }
 }

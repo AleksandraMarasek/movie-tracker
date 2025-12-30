@@ -19,7 +19,34 @@ function render() {
     renderMovies(grid, favorites);
 }
 
-document.addEventListener('DOMContentLoaded', render);
+document.addEventListener('DOMContentLoaded', async () => {
+    const container = document.getElementById('header-container');
+    if (container) {
+        const response = await fetch('/header.html');
+        const html = await response.text();
+        container.innerHTML = html;
+
+        const header = document.getElementById('myHeader');
+        const page = document.getElementById('page');
+        const openMenuButton = document.getElementById('openmenu');
+
+        window.addEventListener('scroll', () => {
+            page.classList.remove('menuopen');
+            if (window.scrollY >= 100) {
+                header.classList.add('sticky');
+            } else {
+                header.classList.remove('sticky');
+            }
+        });
+
+        openMenuButton.addEventListener('click', () => {
+            header.classList.remove('sticky');
+            page.classList.toggle('menuopen');
+        });
+    }
+
+    render();
+});
 
 grid.addEventListener('toggle-favorite', (e) => {
     handleToggleFavorite(e, {
