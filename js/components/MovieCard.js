@@ -1,3 +1,5 @@
+import { isFavorite } from '../storage/favorites.js';
+
 class MovieCard extends HTMLElement {
     constructor() {
         super();
@@ -14,6 +16,9 @@ class MovieCard extends HTMLElement {
         const rating = this.getAttribute('rating');
         const description = this.getAttribute('description');
         const poster = this.getAttribute('poster');
+
+        const movieId = this.getAttribute('movie-id');
+        const fav = isFavorite(movieId);
 
         this.shadowRoot.innerHTML = `
          <style>
@@ -61,9 +66,11 @@ class MovieCard extends HTMLElement {
         <p class="rating">⭐ ${rating}</p>
         <p class="desc">${description}</p>
         <div class="actions">
-            <span class="heart">♡</span>
-            <button class="more-btn">Więcej</button>
-        </div>
+                <span class="heart ${fav ? 'active' : ''}">
+                    ${fav ? '♥' : '♡'}
+                </span>
+                <button class="more-btn">Więcej</button>
+            </div>
       </div>
     `;
     }

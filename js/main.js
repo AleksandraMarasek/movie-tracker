@@ -7,6 +7,8 @@ import {
 } from './services/movieService.js';
 import './components/MovieCard.js';
 import './components/MovieDetails.js';
+import { renderMovies } from './utils/renderMovies.js';
+import { handleToggleFavorite } from './handlers/favoriteHandler.js';
 
 const form = document.querySelector('.search-form');
 const input = document.querySelector('#search-input');
@@ -15,15 +17,17 @@ const grid = document.getElementById('movies-grid');
 function renderCards(items) {
     grid.innerHTML = '';
 
-    items.forEach((item) => {
-        const card = document.createElement('movie-card');
-        card.setAttribute('movie-id', item.id);
-        card.setAttribute('title', item.title);
-        card.setAttribute('poster', item.poster);
-        card.setAttribute('rating', item.rating);
-        card.setAttribute('description', item.description);
-        grid.appendChild(card);
-    });
+    renderMovies(grid, items);
+
+    // items.forEach((item) => {
+    //     const card = document.createElement('movie-card');
+    //     card.setAttribute('movie-id', item.id);
+    //     card.setAttribute('title', item.title);
+    //     card.setAttribute('poster', item.poster);
+    //     card.setAttribute('rating', item.rating);
+    //     card.setAttribute('description', item.description);
+    //     grid.appendChild(card);
+    // });
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -38,7 +42,7 @@ form.addEventListener('submit', async (e) => {
 });
 
 grid.addEventListener('toggle-favorite', (e) => {
-    console.log('FAVORITE TOGGLE:', e.detail.movieId);
+    handleToggleFavorite(e);
 });
 
 grid.addEventListener('open-details', async (e) => {

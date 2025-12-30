@@ -29,6 +29,7 @@ body {
   opacity: 0.6;
   filter: blur(20px);
   transform: scale(1.05);
+  pointer-events: none;
 }
 
 header.main-header {
@@ -54,21 +55,19 @@ header.main-header {
   left: 0;
   right: 0;
   margin: auto;
-
   width: 520px;
   height: 90px;
-
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 26px;
-
   background: var(--surface-color);
   backdrop-filter: blur(8px);
   border-radius: 999px;
   border: 1px solid var(--border-color);
-
   transition: 0.8s all ease;
+  z-index: 1000;
+  pointer-events: auto;
 }
 
 .main-nav a {
@@ -110,7 +109,6 @@ header.main-header {
   height: 2px;
   background: white;
   margin: 6px auto;
-
   transform: scaleX(0);
   transition: 0.6s ease;
 }
@@ -164,7 +162,7 @@ header.sticky #openmenu span {
 }
 
 .filters select {
-  background: transparent;
+  background: var(--bg-color);
   color: var(--text-muted);
   border: 1px solid var(--border-color);
   padding: 8px 12px;
@@ -225,4 +223,14 @@ header.sticky #openmenu span {
   #search-input {
     width: 100%;
   }
+}
+
+.empty-state {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 14px;
+  opacity: 0.6;
+}
+.hidden {
+  display: none;
 }
