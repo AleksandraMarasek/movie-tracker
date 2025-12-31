@@ -104,6 +104,32 @@ class MovieDetails extends HTMLElement {
 
         this.shadowRoot.querySelector('.close-btn').onclick = () =>
             this.remove();
+        const watchBtn = this.shadowRoot.querySelector('.btn-watch');
+        watchBtn.onclick = () => {
+            this.dispatchEvent(
+                new CustomEvent('add-to-watchlist', {
+                    bubbles: true,
+                    composed: true,
+                    detail: {
+                        movie: {
+                            id: String(this._show.id),
+                            title: this._show.name,
+                            poster:
+                                this._show.image?.medium ||
+                                this._show.image?.original,
+                            rating: String(this._show.rating?.average || '—'),
+                            description: this._show.summary
+                                ? this._show.summary
+                                      .replace(/<[^>]*>/g, '')
+                                      .slice(0, 140) + '...'
+                                : 'Brak opisu.',
+                        },
+                    },
+                })
+            );
+            watchBtn.textContent = 'Dodano! ✓';
+            watchBtn.style.borderColor = 'var(--accent-color)';
+        };
         this.shadowRoot.querySelector('.overlay').onclick = () => this.remove();
     }
 }

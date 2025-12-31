@@ -9,6 +9,7 @@ import './components/MovieCard.js';
 import './components/MovieDetails.js';
 import { renderMovies } from './utils/renderMovies.js';
 import { handleToggleFavorite } from './handlers/favoriteHandler.js';
+import { addToWatchlist } from './storage/watchlist.js';
 
 const form = document.querySelector('.search-form');
 const input = document.querySelector('#search-input');
@@ -47,6 +48,11 @@ grid.addEventListener('open-details', async (e) => {
     } catch (error) {
         console.error('Błąd pobierania danych:', error);
     }
+});
+
+document.addEventListener('add-to-watchlist', (e) => {
+    addToWatchlist(e.detail.movie);
+    console.log('Added to watchlist:', e.detail.movie.title);
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
