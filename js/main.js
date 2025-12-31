@@ -1,19 +1,22 @@
-import {
-    getHomeShows,
-    searchShows,
-    getShowDetails,
-    getShowEpisodes,
-    getShowCast,
-} from './services/movieService.js';
+import { getHomeShows, searchShows } from './services/movieService.js';
 import './components/MovieCard.js';
 import './components/MovieDetails.js';
 import { renderMovies } from './utils/renderMovies.js';
 import { handleToggleFavorite } from './handlers/favoriteHandler.js';
-import { addToWatchlist } from './storage/watchlist.js';
+import { attachMovieDetailsHandler } from './handlers/movieDetailsHandler.js';
+import { attachWatchlistHandler } from './handlers/watchlistHandler.js';
 
 const form = document.querySelector('.search-form');
 const input = document.querySelector('#search-input');
 const grid = document.getElementById('movies-grid');
+
+grid.addEventListener('open-details', async (e) => {
+    attachMovieDetailsHandler(e);
+});
+
+document.addEventListener('add-to-watchlist', (e) => {
+    attachWatchlistHandler(e);
+});
 
 function renderCards(items) {
     grid.innerHTML = '';
@@ -36,24 +39,24 @@ grid.addEventListener('toggle-favorite', (e) => {
     handleToggleFavorite(e);
 });
 
-grid.addEventListener('open-details', async (e) => {
-    const id = e.detail.movieId;
+// grid.addEventListener('open-details', async (e) => {
+//     const id = e.detail.movieId;
 
-    try {
-        const details = await getShowDetails(id);
+//     try {
+//         const details = await getShowDetails(id);
 
-        const detailsElement = document.createElement('movie-details');
-        detailsElement.data = details;
-        document.body.appendChild(detailsElement);
-    } catch (error) {
-        console.error('Błąd pobierania danych:', error);
-    }
-});
+//         const detailsElement = document.createElement('movie-details');
+//         detailsElement.data = details;
+//         document.body.appendChild(detailsElement);
+//     } catch (error) {
+//         console.error('Błąd pobierania danych:', error);
+//     }
+// });
 
-document.addEventListener('add-to-watchlist', (e) => {
-    addToWatchlist(e.detail.movie);
-    console.log('Added to watchlist:', e.detail.movie.title);
-});
+// document.addEventListener('add-to-watchlist', (e) => {
+//     addToWatchlist(e.detail.movie);
+//     console.log('Added to watchlist:', e.detail.movie.title);
+// });
 
 document.addEventListener('DOMContentLoaded', async () => {
     const container = document.getElementById('header-container');

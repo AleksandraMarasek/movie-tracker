@@ -1,10 +1,15 @@
 import './components/MovieCard.js';
-import { getFavorites, toggleFavorite } from './storage/favorites.js';
+import { getFavorites } from './storage/favorites.js';
 import { renderMovies } from './utils/renderMovies.js';
 import { handleToggleFavorite } from './handlers/favoriteHandler.js';
+import { attachMovieDetailsHandler } from './handlers/movieDetailsHandler.js';
+import { attachWatchlistHandler } from './handlers/watchlistHandler.js';
 
 const grid = document.getElementById('movies-grid');
 const emptyState = document.getElementById('empty-state');
+
+// attachMovieDetailsHandler(grid);
+// attachWatchlistHandler();
 
 function render() {
     const favorites = getFavorites();
@@ -52,4 +57,12 @@ grid.addEventListener('toggle-favorite', (e) => {
     handleToggleFavorite(e, {
         onAfterToggle: render,
     });
+});
+
+grid.addEventListener('open-details', async (e) => {
+    attachMovieDetailsHandler(e);
+});
+
+document.addEventListener('add-to-watchlist', (e) => {
+    attachWatchlistHandler(e);
 });

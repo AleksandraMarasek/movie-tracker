@@ -4,6 +4,7 @@ import {
     moveToWatched,
     removeFromWatchlist,
 } from './storage/watchlist.js';
+import { handleToggleFavorite } from './handlers/favoriteHandler.js';
 
 const pendingGrid = document.getElementById('pending-grid');
 const watchedGrid = document.getElementById('watched-grid');
@@ -70,4 +71,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (btn) btn.onclick = () => pg.classList.toggle('menuopen');
     }
     render();
+});
+
+pendingGrid.addEventListener('toggle-favorite', (e) => {
+    handleToggleFavorite(e, {
+        onAfterToggle: render,
+    });
+});
+
+watchedGrid.addEventListener('toggle-favorite', (e) => {
+    handleToggleFavorite(e, {
+        onAfterToggle: render,
+    });
 });
