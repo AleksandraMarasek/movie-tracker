@@ -24,7 +24,7 @@
         return safe;
     }
 
-    async function login(email, password) {
+    async function login(email, password, remember = true) {
         const users = await loadUsers();
 
         const e = (email || '').trim().toLowerCase();
@@ -38,6 +38,11 @@
         if (!found)
             return { ok: false, error: 'Nieprawidłowy email lub hasło.' };
 
+        if (window.CookieUtil)
+            window.CookieUtil.set('mt_remember', remember ? '1' : '0', 30);
+
+        window.UserStorage.setMode(remember ? 'local' : 'session');
+
         const baseUser = sanitizeUser({
             ...found,
             lastLoginAt: new Date().toISOString(),
@@ -47,6 +52,11 @@
         const user = { ...baseUser, ...prefs };
 
         window.UserStorage.set(user);
+
+        if (!remember) {
+            localStorage.removeItem('app_current_user');
+        }
+
         return { ok: true, user };
     }
 

@@ -9,6 +9,13 @@
 
     const email = form.querySelector('input[name="email"]');
     const pass = form.querySelector('input[name="password"]');
+    const rememberBox = form.querySelector('input[name="remember"]');
+
+    if (rememberBox && window.CookieUtil) {
+        const v = window.CookieUtil.get('mt_remember');
+        if (v === '0') rememberBox.checked = false;
+        if (v === '1') rememberBox.checked = true;
+    }
 
     const logoImg = document.querySelector('.brand__logo img');
     const logoMark = document.querySelector('.brand__logoMark');
@@ -61,7 +68,13 @@
         ev.preventDefault();
         if (!validate()) return;
 
-        const res = await window.AuthService.login(email.value, pass.value);
+        const remember = !!rememberBox?.checked;
+
+        const res = await window.AuthService.login(
+            email.value,
+            pass.value,
+            remember
+        );
         if (!res.ok) {
             setError(pass, res.error);
             return;
