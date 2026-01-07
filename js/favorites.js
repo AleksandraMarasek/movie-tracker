@@ -5,11 +5,10 @@ import { handleToggleFavorite } from './handlers/favoriteHandler.js';
 import { attachMovieDetailsHandler } from './handlers/movieDetailsHandler.js';
 import { attachWatchlistHandler } from './handlers/watchlistHandler.js';
 
+import { subscribe } from './store/store.js';
+
 const grid = document.getElementById('movies-grid');
 const emptyState = document.getElementById('empty-state');
-
-// attachMovieDetailsHandler(grid);
-// attachWatchlistHandler();
 
 function render() {
     const favorites = getFavorites();
@@ -37,11 +36,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         window.addEventListener('scroll', () => {
             page.classList.remove('menuopen');
-            if (window.scrollY >= 100) {
-                header.classList.add('sticky');
-            } else {
-                header.classList.remove('sticky');
-            }
+            if (window.scrollY >= 100) header.classList.add('sticky');
+            else header.classList.remove('sticky');
         });
 
         openMenuButton.addEventListener('click', () => {
@@ -51,12 +47,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     render();
+    subscribe(() => render());
 });
 
 grid.addEventListener('toggle-favorite', (e) => {
-    handleToggleFavorite(e, {
-        onAfterToggle: render,
-    });
+    handleToggleFavorite(e);
 });
 
 grid.addEventListener('open-details', async (e) => {

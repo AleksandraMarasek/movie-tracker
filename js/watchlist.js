@@ -6,6 +6,8 @@ import {
 } from './storage/watchlist.js';
 import { handleToggleFavorite } from './handlers/favoriteHandler.js';
 
+import { subscribe } from './store/store.js';
+
 const pendingGrid = document.getElementById('pending-grid');
 const watchedGrid = document.getElementById('watched-grid');
 
@@ -29,7 +31,6 @@ function createWatchlistItem(movie, isPending) {
         moveBtn.textContent = 'Obejrzane';
         moveBtn.onclick = () => {
             moveToWatched(movie.id);
-            render();
         };
         actions.appendChild(moveBtn);
     }
@@ -39,7 +40,6 @@ function createWatchlistItem(movie, isPending) {
     removeBtn.textContent = 'Usuń';
     removeBtn.onclick = () => {
         removeFromWatchlist(movie.id, isPending ? 'pending' : 'watched');
-        render();
     };
 
     actions.appendChild(removeBtn);
@@ -70,17 +70,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         const pg = document.getElementById('page');
         if (btn) btn.onclick = () => pg.classList.toggle('menuopen');
     }
+
     render();
+    subscribe(() => render());
 });
 
 pendingGrid.addEventListener('toggle-favorite', (e) => {
-    handleToggleFavorite(e, {
-        onAfterToggle: render,
-    });
+    handleToggleFavorite(e);
 });
 
 watchedGrid.addEventListener('toggle-favorite', (e) => {
-    handleToggleFavorite(e, {
-        onAfterToggle: render,
-    });
+    handleToggleFavorite(e);
 });

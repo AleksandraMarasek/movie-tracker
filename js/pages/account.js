@@ -3,7 +3,6 @@
     if (!window.AuthService.requireAuth('../pages/login.html')) return;
 
     const user = window.AuthService.currentUser();
-
     const $ = (sel) => document.querySelector(sel);
 
     const name =
@@ -19,16 +18,49 @@
     $('[data-user-since]').textContent = kontoOd;
     $('[data-last-login]').textContent = lastLogin;
 
-    function safeCount(key) {
+    function setCountsFromStore() {
+        if (!window.AppStore) return;
+
+        const st = window.AppStore.getState();
+        const favCount = Array.isArray(st.favorites) ? st.favorites.length : 0;
+        const wl = st.watchlist || { pending: [], watched: [] };
+        const watchCount =
+            (Array.isArray(wl.pending) ? wl.pending.length : 0) +
+            (Array.isArray(wl.watched) ? wl.watched.length : 0);
+
+        $('#favCount').textContent = String(favCount);
+        $('#watchCount').textContent = String(watchCount);
+    }
+    function setCountsFallback() {
+        const safeArrLen = (key) => {
+            try {
+                const v = JSON.parse(localStorage.getItem(key) || '[]');
+                return Array.isArray(v) ? v.length : 0;
+            } catch {
+                return 0;
+            }
+        };
+
+        $('#favCount').textContent = String(safeArrLen('favorites'));
+
         try {
-            const v = JSON.parse(localStorage.getItem(key) || '[]');
-            return Array.isArray(v) ? v.length : 0;
+            const w = JSON.parse(
+                localStorage.getItem('movie_tracker_watchlist') || '{}'
+            );
+            const pending = Array.isArray(w?.pending) ? w.pending.length : 0;
+            const watched = Array.isArray(w?.watched) ? w.watched.length : 0;
+            $('#watchCount').textContent = String(pending + watched);
         } catch {
-            return 0;
+            $('#watchCount').textContent = '0';
         }
     }
-    $('#favCount').textContent = safeCount('favorites');
-    $('#watchCount').textContent = safeCount('watchlist');
+
+    if (window.AppStore) {
+        setCountsFromStore();
+        window.AppStore.subscribe(() => setCountsFromStore());
+    } else {
+        setCountsFallback();
+    }
 
     const logoutBtn = $('[data-logout]');
     if (logoutBtn) {
