@@ -5,7 +5,7 @@ import {
     removeFromWatchlist,
 } from './storage/watchlist.js';
 import { handleToggleFavorite } from './handlers/favoriteHandler.js';
-
+import { initMenuA11y } from './utils/menuA11y.js';
 import { subscribe } from './store/store.js';
 
 const pendingGrid = document.getElementById('pending-grid');
@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (headerCont) {
         const res = await fetch('/header.html');
         headerCont.innerHTML = await res.text();
+        initMenuA11y();
 
         const btn = document.getElementById('openmenu');
         const pg = document.getElementById('page');

@@ -1,4 +1,5 @@
 import { subscribe, getState } from '../store/store.js';
+import { trapFocus } from '../utils/focusTrap.js';
 
 (function () {
     if (!window.AuthService || !window.UserStorage) return;
@@ -48,6 +49,9 @@ import { subscribe, getState } from '../store/store.js';
     const modal = $('[data-modal]');
     const avatarsWrap = $('[data-avatars]');
     const openBtn = $('[data-open-avatar]');
+    const closeBtn = modal?.querySelector('.iconBtn');
+
+    let cleanupTrap = null;
 
     const AVAILABLE = [
         '../js/data/img/profile1.jpg',
@@ -77,13 +81,14 @@ import { subscribe, getState } from '../store/store.js';
 
         modal.hidden = false;
         modal.setAttribute('aria-hidden', 'false');
+        modal.setAttribute('aria-modal', 'true');
         document.body.classList.add('modalOpen');
 
         const selected = currentAvatar();
         avatarsWrap.innerHTML = AVAILABLE.map((src) => {
             const isActive = src === selected ? ' is-active' : '';
             return `
-        <button class="avatarPick${isActive}" type="button" data-pick="${src}">
+        <button class="avatarPick${isActive}" type="button" data-pick="${src}" aria-label="Wybierz avatar">
           <img src="${src}" alt="Avatar" />
         </button>
       `;
@@ -96,13 +101,27 @@ import { subscribe, getState } from '../store/store.js';
                 closeModal();
             });
         });
+
+        const panel = modal.querySelector('.modal__panel');
+        if (cleanupTrap) cleanupTrap();
+        cleanupTrap = trapFocus(panel, { initialFocus: closeBtn || panel });
+
+        panel.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
     }
 
     function closeModal() {
         if (!modal) return;
+
         modal.hidden = true;
         modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modalOpen');
+
+        if (cleanupTrap) {
+            cleanupTrap();
+            cleanupTrap = null;
+        }
     }
 
     if (openBtn) openBtn.addEventListener('click', openModal);
@@ -112,8 +131,4 @@ import { subscribe, getState } from '../store/store.js';
             el.addEventListener('click', closeModal);
         });
     }
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal && !modal.hidden) closeModal();
-    });
 })();

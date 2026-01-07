@@ -1,10 +1,19 @@
 import { requireAuth } from '../services/authGuard.js';
 import { toggleFavorite, isFavorite } from '../store/store.js';
+import { trapFocus } from '../utils/focusTrap.js';
 
 class MovieDetails extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
+        this._cleanupFocus = null;
+    }
+
+    disconnectedCallback() {
+        if (this._cleanupFocus) {
+            this._cleanupFocus();
+            this._cleanupFocus = null;
+        }
     }
 
     set data(show) {
@@ -20,8 +29,11 @@ class MovieDetails extends HTMLElement {
         const year = premiered ? premiered.split('-')[0] : 'N/A';
         const poster = image?.original || image?.medium || '';
         const id = String(this._show.id);
-
         const favNow = isFavorite(id);
+
+        this.setAttribute('role', 'dialog');
+        this.setAttribute('aria-modal', 'true');
+        this.setAttribute('aria-label', `Szczegóły: ${name}`);
 
         this.shadowRoot.innerHTML = `
       <style>
@@ -61,12 +73,13 @@ class MovieDetails extends HTMLElement {
           border: 1px solid rgba(255,255,255,0.1);
           box-shadow: 0 20px 50px rgba(0,0,0,0.5);
           overflow: hidden;
+          outline: none;
         }
         .close-btn {
           position: absolute;
           top: 20px; right: 20px;
           background: none; border: none; color: white;
-          font-size: 30px; cursor: pointer; opacity: 0.5;
+          font-size: 30px; cursor: pointer; opacity: 0.6;
         }
         .close-btn:hover { opacity: 1; }
         img.poster { width: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
@@ -88,12 +101,12 @@ class MovieDetails extends HTMLElement {
         }
       </style>
 
-      <div class="overlay"></div>
-      <div class="bg-blur"></div>
+      <div class="overlay" part="overlay"></div>
+      <div class="bg-blur" aria-hidden="true"></div>
 
-      <div class="content">
-        <button class="close-btn">&times;</button>
-        <img class="poster" src="${poster}">
+      <div class="content" tabindex="-1">
+        <button class="close-btn" type="button" aria-label="Zamknij okno">&times;</button>
+        <img class="poster" src="${poster}" alt="Plakat: ${name}">
         <div class="info">
           <h2>${name}</h2>
           <div class="meta">${year} • ${runtime || '??'} min • ⭐ ${
@@ -103,20 +116,33 @@ class MovieDetails extends HTMLElement {
           <div class="summary">${summary || 'Brak opisu.'}</div>
 
           <div class="btn-group">
-            <button class="btn btn-fav">${
+            <button class="btn btn-fav" type="button">${
                 favNow ? 'usuń z ulubionych ♥' : 'dodaj do ulubionych ♥'
             }</button>
-            <button class="btn btn-watch">dodaj do obejrzenia +</button>
+            <button class="btn btn-watch" type="button">dodaj do obejrzenia +</button>
           </div>
         </div>
       </div>
     `;
 
         const close = () => this.remove();
-        this.shadowRoot.querySelector('.close-btn').onclick = close;
-        this.shadowRoot.querySelector('.overlay').onclick = close;
 
+        const overlay = this.shadowRoot.querySelector('.overlay');
+        const content = this.shadowRoot.querySelector('.content');
+        const closeBtn = this.shadowRoot.querySelector('.close-btn');
         const favBtn = this.shadowRoot.querySelector('.btn-fav');
+        const watchBtn = this.shadowRoot.querySelector('.btn-watch');
+
+        if (this._cleanupFocus) this._cleanupFocus();
+        this._cleanupFocus = trapFocus(content, { initialFocus: closeBtn });
+
+        content.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') close();
+        });
+
+        closeBtn.onclick = close;
+        overlay.onclick = close;
+
         favBtn.onclick = () => {
             if (!requireAuth()) return;
 
@@ -141,7 +167,6 @@ class MovieDetails extends HTMLElement {
                 : 'usuń z ulubionych ♥';
         };
 
-        const watchBtn = this.shadowRoot.querySelector('.btn-watch');
         watchBtn.onclick = () => {
             if (!requireAuth()) return;
 
