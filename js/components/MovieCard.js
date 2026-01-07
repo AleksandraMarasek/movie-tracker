@@ -1,25 +1,71 @@
-import { isFavorite } from '../storage/favorites.js';
 import { requireAuth } from '../services/authGuard.js';
+import { isFavorite, subscribe } from '../store/store.js';
 
 class MovieCard extends HTMLElement {
+    static get observedAttributes() {
+        return ['movie-id', 'title', 'rating', 'description', 'poster'];
+    }
+
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
+        this._unsubscribe = null;
     }
 
     connectedCallback() {
         this.render();
         this.setupEvents();
+
+        if (!this._unsubscribe) {
+            this._unsubscribe = subscribe(() => this.updateHeart());
+        }
+    }
+
+    disconnectedCallback() {
+        if (this._unsubscribe) {
+            this._unsubscribe();
+            this._unsubscribe = null;
+        }
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue === newValue) return;
+
+        if (this.isConnected) {
+            this.render();
+            this.setupEvents();
+        }
+    }
+
+    set movie(data) {
+        if (!data) return;
+        this.setAttribute('movie-id', String(data.id ?? ''));
+        this.setAttribute('title', String(data.title ?? ''));
+        this.setAttribute('rating', String(data.rating ?? '—'));
+        this.setAttribute('description', String(data.description ?? ''));
+        this.setAttribute('poster', String(data.poster ?? ''));
+    }
+
+    get movieId() {
+        return this.getAttribute('movie-id');
+    }
+
+    updateHeart() {
+        const heart = this.shadowRoot?.querySelector('.heart');
+        if (!heart) return;
+
+        const fav = isFavorite(this.movieId);
+        heart.classList.toggle('active', fav);
+        heart.textContent = fav ? '♥' : '♡';
     }
 
     render() {
-        const title = this.getAttribute('title');
-        const rating = this.getAttribute('rating');
-        const description = this.getAttribute('description');
-        const poster = this.getAttribute('poster');
+        const title = this.getAttribute('title') || '';
+        const rating = this.getAttribute('rating') || '—';
+        const description = this.getAttribute('description') || '';
+        const poster = this.getAttribute('poster') || '';
 
-        const movieId = this.getAttribute('movie-id');
-        const fav = isFavorite(movieId);
+        const fav = isFavorite(this.movieId);
 
         this.shadowRoot.innerHTML = `
       <style>
@@ -61,14 +107,13 @@ class MovieCard extends HTMLElement {
 
       <div class="card">
         <img src="${poster}" alt="${title}">
-        <h3>${title}</h3>
+        <h3 title="${title}">${title}</h3>
         <p class="rating">⭐ ${rating}</p>
         <p class="desc">${description}</p>
+
         <div class="actions">
-          <span class="heart ${fav ? 'active' : ''}">
-            ${fav ? '♥' : '♡'}
-          </span>
-          <button class="more-btn">Więcej</button>
+          <span class="heart ${fav ? 'active' : ''}">${fav ? '♥' : '♡'}</span>
+          <button class="more-btn" type="button">Więcej</button>
         </div>
       </div>
     `;
@@ -78,7 +123,7 @@ class MovieCard extends HTMLElement {
         const heart = this.shadowRoot.querySelector('.heart');
         const moreBtn = this.shadowRoot.querySelector('.more-btn');
 
-        heart.addEventListener('click', (e) => {
+        heart?.addEventListener('click', (e) => {
             e.stopPropagation();
 
             if (!requireAuth()) return;
@@ -90,19 +135,17 @@ class MovieCard extends HTMLElement {
                 new CustomEvent('toggle-favorite', {
                     bubbles: true,
                     composed: true,
-                    detail: {
-                        movieId: this.getAttribute('movie-id'),
-                    },
+                    detail: { movieId: this.movieId },
                 })
             );
         });
 
-        moreBtn.addEventListener('click', () => {
+        moreBtn?.addEventListener('click', () => {
             this.dispatchEvent(
                 new CustomEvent('open-details', {
                     bubbles: true,
                     composed: true,
-                    detail: { movieId: this.getAttribute('movie-id') },
+                    detail: { movieId: this.movieId },
                 })
             );
         });

@@ -1,18 +1,45 @@
 import { requireAuth } from '../services/authGuard.js';
 import { toggleFavorite, isFavorite } from '../store/store.js';
 import { trapFocus } from '../utils/focusTrap.js';
+import { getShowDetails } from '../services/movieService.js';
 
 class MovieDetails extends HTMLElement {
+    static get observedAttributes() {
+        return ['show-id'];
+    }
+
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
         this._cleanupFocus = null;
+        this._loading = false;
     }
 
     disconnectedCallback() {
         if (this._cleanupFocus) {
             this._cleanupFocus();
             this._cleanupFocus = null;
+        }
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name !== 'show-id') return;
+        if (oldValue === newValue) return;
+        if (this.isConnected && newValue) {
+            this.loadById(newValue);
+        }
+    }
+
+    async loadById(id) {
+        if (this._loading) return;
+        this._loading = true;
+        try {
+            const details = await getShowDetails(id);
+            this.data = details;
+        } catch (e) {
+            console.error('MovieDetails load error:', e);
+        } finally {
+            this._loading = false;
         }
     }
 
@@ -101,7 +128,7 @@ class MovieDetails extends HTMLElement {
         }
       </style>
 
-      <div class="overlay" part="overlay"></div>
+      <div class="overlay"></div>
       <div class="bg-blur" aria-hidden="true"></div>
 
       <div class="content" tabindex="-1">
