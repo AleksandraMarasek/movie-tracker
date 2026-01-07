@@ -1,3 +1,5 @@
+import { subscribe, getState } from '../store/store.js';
+
 (function () {
     if (!window.AuthService || !window.UserStorage) return;
     if (!window.AuthService.requireAuth('../pages/login.html')) return;
@@ -18,11 +20,10 @@
     $('[data-user-since]').textContent = kontoOd;
     $('[data-last-login]').textContent = lastLogin;
 
-    function setCountsFromStore() {
-        if (!window.AppStore) return;
-
-        const st = window.AppStore.getState();
+    function renderCounts() {
+        const st = getState();
         const favCount = Array.isArray(st.favorites) ? st.favorites.length : 0;
+
         const wl = st.watchlist || { pending: [], watched: [] };
         const watchCount =
             (Array.isArray(wl.pending) ? wl.pending.length : 0) +
@@ -31,36 +32,9 @@
         $('#favCount').textContent = String(favCount);
         $('#watchCount').textContent = String(watchCount);
     }
-    function setCountsFallback() {
-        const safeArrLen = (key) => {
-            try {
-                const v = JSON.parse(localStorage.getItem(key) || '[]');
-                return Array.isArray(v) ? v.length : 0;
-            } catch {
-                return 0;
-            }
-        };
 
-        $('#favCount').textContent = String(safeArrLen('favorites'));
-
-        try {
-            const w = JSON.parse(
-                localStorage.getItem('movie_tracker_watchlist') || '{}'
-            );
-            const pending = Array.isArray(w?.pending) ? w.pending.length : 0;
-            const watched = Array.isArray(w?.watched) ? w.watched.length : 0;
-            $('#watchCount').textContent = String(pending + watched);
-        } catch {
-            $('#watchCount').textContent = '0';
-        }
-    }
-
-    if (window.AppStore) {
-        setCountsFromStore();
-        window.AppStore.subscribe(() => setCountsFromStore());
-    } else {
-        setCountsFallback();
-    }
+    renderCounts();
+    subscribe(() => renderCounts());
 
     const logoutBtn = $('[data-logout]');
     if (logoutBtn) {
@@ -84,14 +58,15 @@
     function currentAvatar() {
         return (
             user?.profilePic ||
-            window.UserStorage.getPrefs(email).profilePic ||
+            window.UserStorage.getPrefs(user?.email).profilePic ||
             AVAILABLE[0]
         );
     }
 
     function setAvatar(src) {
         if (avatarEl) avatarEl.src = src;
-        window.UserStorage.updatePrefs(email, { profilePic: src });
+        if (user?.email)
+            window.UserStorage.updatePrefs(user.email, { profilePic: src });
         window.UserStorage.update({ profilePic: src });
     }
 
@@ -125,7 +100,6 @@
 
     function closeModal() {
         if (!modal) return;
-
         modal.hidden = true;
         modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modalOpen');
