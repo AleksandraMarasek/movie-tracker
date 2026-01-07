@@ -8,6 +8,12 @@ function stripHtml(html) {
         .trim();
 }
 
+function toYear(premiered) {
+    if (!premiered) return null;
+    const y = Number(String(premiered).slice(0, 4));
+    return Number.isFinite(y) ? y : null;
+}
+
 function toCardModel(show) {
     const poster = show?.image?.medium || show?.image?.original || 'N/A';
     const rating = show?.rating?.average ?? '—';
@@ -22,6 +28,9 @@ function toCardModel(show) {
             description.length > 140
                 ? description.slice(0, 140) + '…'
                 : description,
+
+        genres: Array.isArray(show?.genres) ? show.genres : [],
+        year: toYear(show?.premiered),
     };
 }
 

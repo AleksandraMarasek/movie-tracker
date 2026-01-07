@@ -10,6 +10,11 @@ const form = document.querySelector('.search-form');
 const input = document.querySelector('#search-input');
 const grid = document.getElementById('movies-grid');
 
+const genreSelect = document.getElementById('genre-filter');
+const yearSelect = document.getElementById('year-filter');
+
+let lastItems = [];
+
 grid.addEventListener('open-details', async (e) => {
     attachMovieDetailsHandler(e);
 });
@@ -18,47 +23,61 @@ document.addEventListener('add-to-watchlist', (e) => {
     attachWatchlistHandler(e);
 });
 
-function renderCards(items) {
-    grid.innerHTML = '';
-
-    renderMovies(grid, items);
-}
-
-document.addEventListener('DOMContentLoaded', async () => {
-    const items = await getHomeShows(50);
-    renderCards(items);
-});
-
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const items = await searchShows(input.value);
-    renderCards(items);
-});
-
 grid.addEventListener('toggle-favorite', (e) => {
     handleToggleFavorite(e);
 });
 
-// grid.addEventListener('open-details', async (e) => {
-//     const id = e.detail.movieId;
+function normalizeGenreValue(v) {
+    if (!v) return null;
+    if (v === 'action') return 'Action';
+    if (v === 'drama') return 'Drama';
+    if (v === 'sci-fi') return 'Science-Fiction';
+    return null;
+}
 
-//     try {
-//         const details = await getShowDetails(id);
+function applyFilters(items) {
+    let out = [...items];
 
-//         const detailsElement = document.createElement('movie-details');
-//         detailsElement.data = details;
-//         document.body.appendChild(detailsElement);
-//     } catch (error) {
-//         console.error('Błąd pobierania danych:', error);
-//     }
-// });
+    const gVal = genreSelect?.value || '';
+    const yVal = yearSelect?.value || '';
 
-// document.addEventListener('add-to-watchlist', (e) => {
-//     addToWatchlist(e.detail.movie);
-//     console.log('Added to watchlist:', e.detail.movie.title);
-// });
+    const wantedGenre = normalizeGenreValue(gVal);
+
+    if (wantedGenre) {
+        out = out.filter(
+            (m) => Array.isArray(m.genres) && m.genres.includes(wantedGenre)
+        );
+    }
+
+    if (yVal) {
+        if (yVal === 'older') {
+            out = out.filter(
+                (m) => typeof m.year === 'number' && m.year <= 2022
+            );
+        } else {
+            const yNum = Number(yVal);
+            out = out.filter(
+                (m) => typeof m.year === 'number' && m.year === yNum
+            );
+        }
+    }
+
+    return out;
+}
+
+function renderCards(items) {
+    grid.innerHTML = '';
+    renderMovies(grid, items);
+}
+
+function renderFromLast() {
+    renderCards(applyFilters(lastItems));
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
+    lastItems = await getHomeShows(50);
+    renderFromLast();
+
     const container = document.getElementById('header-container');
     if (!container) return;
 
@@ -72,11 +91,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     window.addEventListener('scroll', () => {
         page.classList.remove('menuopen');
-        if (window.scrollY >= 100) {
-            header.classList.add('sticky');
-        } else {
-            header.classList.remove('sticky');
-        }
+        if (window.scrollY >= 100) header.classList.add('sticky');
+        else header.classList.remove('sticky');
     });
 
     openMenuButton.addEventListener('click', () => {
@@ -84,3 +100,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         page.classList.toggle('menuopen');
     });
 });
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const q = (input?.value || '').trim();
+
+    if (q) lastItems = await searchShows(q);
+    else lastItems = await getHomeShows(50);
+
+    renderFromLast();
+});
+
+genreSelect?.addEventListener('change', renderFromLast);
+yearSelect?.addEventListener('change', renderFromLast);
