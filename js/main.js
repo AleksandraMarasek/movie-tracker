@@ -66,14 +66,15 @@ function applyFilters(items) {
     }
 
     if (yVal) {
-        if (yVal === 'older')
+        if (yVal === 'older') {
             out = out.filter(
                 (m) => typeof m.year === 'number' && m.year <= 2022
             );
-        else
+        } else {
             out = out.filter(
                 (m) => typeof m.year === 'number' && m.year === Number(yVal)
             );
+        }
     }
     return out;
 }
@@ -102,20 +103,24 @@ async function fetchAndRender(query = '') {
             lastItems = await getHomeShows(50);
         }
         renderFromLast();
+
+        const loader = document.getElementById('app-loader');
+        if (loader && !loader.classList.contains('hidden')) {
+            setTimeout(() => loader.classList.add('hidden'), 1500);
+        }
     } catch (error) {
         if (error.name === 'AbortError') return;
         showStatus('Error fetching data. Try again later.', true);
         console.error('Fetch Error:', error);
+
+        document.getElementById('app-loader')?.classList.add('hidden');
     }
 }
 
 input?.addEventListener('input', (e) => {
     clearTimeout(searchTimeout);
     const q = e.target.value.trim();
-
-    searchTimeout = setTimeout(() => {
-        fetchAndRender(q);
-    }, 400);
+    searchTimeout = setTimeout(() => fetchAndRender(q), 400);
 });
 
 form.addEventListener('submit', (e) => {
@@ -141,27 +146,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     const container = document.getElementById('header-container');
     if (!container) return;
 
-    const response = await fetch('/header.html');
-    const html = await response.text();
-    container.innerHTML = html;
-    initMenuA11y();
-    initThemeToggle();
+    try {
+        const response = await fetch('/header.html');
+        if (!response.ok) throw new Error('Failed to fetch header');
 
-            const header = document.getElementById('myHeader');
-            const page = document.getElementById('page');
-            const openMenuButton = document.getElementById('openmenu');
+        const html = await response.text();
+        container.innerHTML = html;
 
-            window.addEventListener('scroll', () => {
-                page.classList.remove('menuopen');
+        initMenuA11y();
+        initThemeToggle();
+
+        const header = document.getElementById('myHeader');
+        const page = document.getElementById('page');
+        const openMenuButton = document.getElementById('openmenu');
+
+        window.addEventListener('scroll', () => {
+            page.classList.remove('menuopen');
+            if (header)
                 header.classList.toggle('sticky', window.scrollY >= 100);
-            });
+        });
 
-            openMenuButton?.addEventListener('click', () => {
-                header.classList.remove('sticky');
-                page.classList.toggle('menuopen');
-            });
-        } catch (err) {
-            console.error('Error loading header:', err);
-        }
+        openMenuButton?.addEventListener('click', () => {
+            if (header) header.classList.remove('sticky');
+            page?.classList.toggle('menuopen');
+        });
+    } catch (err) {
+        console.error('Error loading header:', err);
     }
 });

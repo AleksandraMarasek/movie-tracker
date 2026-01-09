@@ -52,6 +52,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     render();
     subscribe(() => render());
+
+    const loader = document.getElementById('app-loader');
+    if (loader) {
+        setTimeout(() => loader.classList.add('hidden'), 1500);
+    }
 });
 
 grid.addEventListener('toggle-favorite', (e) => {
