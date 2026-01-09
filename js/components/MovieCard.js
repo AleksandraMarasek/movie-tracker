@@ -95,10 +95,14 @@ class MovieCard extends HTMLElement {
 
         .card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); }
         img { width: 100%; border-radius: 8px; aspect-ratio: 2/3; object-fit: cover; }
-        h3 { font-size: 16px; margin: 10px 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .rating { color: #ffcc00; font-weight: bold; font-size: 14px; }
-        .desc { font-size: 12px; color: #ccc; margin: 8px 0; flex-grow: 1; }
-
+        h3 { 
+        font-size: 16px; 
+        margin: 10px 0 5px; 
+        white-space: nowrap; 
+        overflow: hidden; 
+        text-overflow: ellipsis; 
+        color: var(--text-color); /* Dodano dla spójności tytułu */
+        }
         .actions { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
         .heart { cursor: pointer; font-size: 20px; color: #888; transition: 0.3s; user-select: none; }
         .heart.active { color: #f2a4f5; }
