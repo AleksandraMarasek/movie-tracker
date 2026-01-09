@@ -72,11 +72,13 @@ export async function getHomeShows(limit = 50) {
     return picked;
 }
 
-export async function searchShows(query) {
+export async function searchShows(query, signal) {
     const q = query.trim();
     if (!q) return [];
 
-    const data = await tvmazeGet(`/search/shows?q=${encodeURIComponent(q)}`);
+    const data = await tvmazeGet(`/search/shows?q=${encodeURIComponent(q)}`, {
+        signal,
+    });
     if (!Array.isArray(data)) return [];
 
     return data
