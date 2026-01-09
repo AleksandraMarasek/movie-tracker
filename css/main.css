@@ -1,11 +1,35 @@
-:root {
+:root[data-theme='dark'] {
   --bg-color: #0b0b0b;
+  --bg-gradient: radial-gradient(circle at top, #141414, #000);
+
   --surface-color: rgba(255, 255, 255, 0.06);
   --surface-strong: rgba(255, 255, 255, 0.1);
+
   --text-color: #ffffff;
   --text-muted: rgba(255, 255, 255, 0.6);
+
   --accent-color: #f2a4f5;
   --border-color: rgba(255, 255, 255, 0.12);
+
+  --input-bg: #141414;
+  --button-bg: #000;
+}
+
+:root[data-theme='light'] {
+  --bg-color: #fedfff;
+  --bg-gradient: radial-gradient(circle at top, #fedfff, #a55fa6);
+
+  --surface-color: rgba(0, 0, 0, 0.05);
+  --surface-strong: rgba(0, 0, 0, 0.08);
+
+  --text-color: #111111;
+  --text-muted: rgba(0, 0, 0, 0.6);
+
+  --accent-color: #f2a4f5;
+  --border-color: rgba(0, 0, 0, 0.15);
+
+  --input-bg: #fedfff;
+  --button-bg: #fedfff;
 }
 
 * {
@@ -14,11 +38,18 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+}
+
 body {
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background: radial-gradient(circle at top, #141414, #000);
   color: var(--text-color);
   line-height: 1.6;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
 }
 
 #page {
@@ -96,21 +127,23 @@ header.main-header {
   border-radius: 50%;
   border: none;
 
-  background: rgba(0, 0, 0, 0.5);
+  /* background: rgba(0, 0, 0, 0.5); */
   cursor: pointer;
 
   transform: scale(0);
   transition: 0.3s ease;
+  background: var(--surface-strong);
 }
 
 #openmenu span {
   display: block;
   width: 40%;
   height: 2px;
-  background: white;
+  /* background: white; */
   margin: 6px auto;
   transform: scaleX(0);
   transition: 0.6s ease;
+  background: var(--text-color);
 }
 
 header.sticky .main-nav {
@@ -149,12 +182,14 @@ header.sticky #openmenu span {
 }
 
 #search-input {
-  background: #141414;
+  /* background: #141414; */
   border: 1px solid var(--border-color);
   padding: 12px 20px;
   border-radius: 30px;
-  color: white;
+  /* color: white; */
   width: 280px;
+  background: var(--input-bg);
+  color: var(--text-color);
 }
 
 #search-input::placeholder {
@@ -178,10 +213,12 @@ header.sticky #openmenu span {
   font-size: 16px;
   font-weight: 700;
   color: #fff;
-  background: #000;
+  /* background: #000; */
   overflow: hidden;
   cursor: pointer;
   z-index: 0;
+  background: var(--button-bg);
+  color: var(--text-color);
 }
 
 .btn-search.animated-btn::before {
@@ -321,6 +358,11 @@ header.sticky #openmenu span {
     rgb(208, 189, 255) 67%,
     rgb(80, 69, 206) 81%
   );
+}
+
+.theme-toggle:hover {
+  background: var(--surface-strong);
+  transform: scale(1.05);
 }
 
 @keyframes animate {
