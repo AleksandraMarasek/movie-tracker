@@ -6,6 +6,7 @@ import { handleToggleFavorite } from './handlers/favoriteHandler.js';
 import { attachMovieDetailsHandler } from './handlers/movieDetailsHandler.js';
 import { attachWatchlistHandler } from './handlers/watchlistHandler.js';
 import { initMenuA11y } from './utils/menuA11y.js';
+import { initThemeToggle } from './utils/themeToggle.js';
 
 const form = document.querySelector('.search-form');
 const input = document.querySelector('#search-input');
@@ -138,11 +139,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     fetchAndRender();
 
     const container = document.getElementById('header-container');
-    if (container) {
-        try {
-            const response = await fetch('/header.html');
-            container.innerHTML = await response.text();
-            initMenuA11y();
+    if (!container) return;
+
+    const response = await fetch('/header.html');
+    const html = await response.text();
+    container.innerHTML = html;
+    initMenuA11y();
+    initThemeToggle();
 
             const header = document.getElementById('myHeader');
             const page = document.getElementById('page');

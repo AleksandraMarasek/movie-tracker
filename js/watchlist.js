@@ -7,6 +7,7 @@ import {
 import { handleToggleFavorite } from './handlers/favoriteHandler.js';
 import { initMenuA11y } from './utils/menuA11y.js';
 import { subscribe } from './store/store.js';
+import { initThemeToggle } from './utils/themeToggle.js';
 
 const pendingGrid = document.getElementById('pending-grid');
 const watchedGrid = document.getElementById('watched-grid');
@@ -66,6 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const res = await fetch('/header.html');
         headerCont.innerHTML = await res.text();
         initMenuA11y();
+        initThemeToggle();
 
         const btn = document.getElementById('openmenu');
         const pg = document.getElementById('page');
