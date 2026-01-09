@@ -5,20 +5,103 @@
     <title>Ulubione</title>
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/components.css" />
+    <style>
+      .carousel-section {
+        height: 100vh;
+        display: flex;
+        perspective: 1000px;
+        transform-style: preserve-3d;
+        overflow: hidden;
+        margin-top: -70px;
+      }
+
+      #drag-container,
+      #spin-container {
+        display: flex;
+        margin: auto;
+        transform-style: preserve-3d;
+        transform: rotateX(-10deg);
+      }
+
+      #drag-container img {
+        transform-style: preserve-3d;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        line-height: 200px;
+        font-size: 50px;
+        text-align: center;
+        box-shadow: 0 0 8px #fff;
+        -webkit-box-reflect: below 10px
+          linear-gradient(transparent, transparent, #0005);
+      }
+
+      #drag-container img:hover {
+        box-shadow: 0 0 15px var(--accent-color);
+        -webkit-box-reflect: below 10px
+          linear-gradient(transparent, transparent, var(--accent-color));
+      }
+
+      #ground {
+        width: 900px;
+        height: 900px;
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotateX(90deg);
+        background: -webkit-radial-gradient(
+          center center,
+          farthest-side,
+          rgba(242, 164, 245, 0.2),
+          transparent
+        );
+      }
+
+      .guest-message {
+        position: absolute;
+        bottom: 10%;
+        width: 100%;
+        text-align: center;
+        z-index: 10;
+      }
+
+      .guest-message h2 {
+        color: var(--accent-color);
+        font-size: 2rem;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+    </style>
   </head>
   <body>
-    <div id="app-loader">
-      <div class="loader-wrapper">
-        <div class="logo-part">
-          <img src="/js/data/img/logo.png" alt="Logo" class="loader-img" />
-        </div>
-        <div class="text-part">Movie Tracker</div>
-      </div>
-    </div>
     <div id="header-container"></div>
 
     <div id="page">
-      <main class="movies-container favorites-page">
+      <div id="guest-view" class="hidden">
+        <section class="carousel-section">
+          <div id="drag-container">
+            <div id="spin-container"></div>
+            <div id="ground"></div>
+          </div>
+        </section>
+        <div class="guest-message">
+          <h2>
+            <a
+              href="/pages/account.html"
+              style="
+                color: var(--text-color);
+                text-decoration: none;
+                border-bottom: 2px solid var(--accent-color);
+                padding-bottom: 2px;
+              "
+              >Zaloguj się</a
+            >, aby dodawać ulubione filmy
+          </h2>
+        </div>
+      </div>
+
+      <main id="auth-view" class="movies-container favorites-page hidden">
         <div class="favorites-title-container">
           <div class="content">
             <p>Ulubione filmy</p>

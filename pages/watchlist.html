@@ -6,6 +6,69 @@
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/components.css" />
     <style>
+      .carousel-section {
+        height: 100vh;
+        display: flex;
+        perspective: 1000px;
+        transform-style: preserve-3d;
+        overflow: hidden;
+        margin-top: -70px;
+      }
+      #drag-container,
+      #spin-container {
+        position: relative;
+        display: flex;
+        margin: auto;
+        transform-style: preserve-3d;
+        transform: rotateX(-10deg);
+      }
+      #drag-container img {
+        transform-style: preserve-3d;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        box-shadow: 0 0 8px #fff;
+        -webkit-box-reflect: below 10px
+          linear-gradient(transparent, transparent, #0005);
+      }
+      #drag-container img:hover {
+        box-shadow: 0 0 15px var(--accent-color);
+        -webkit-box-reflect: below 10px
+          linear-gradient(transparent, transparent, var(--accent-color));
+      }
+      #ground {
+        width: 900px;
+        height: 900px;
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotateX(90deg);
+        background: -webkit-radial-gradient(
+          center center,
+          farthest-side,
+          rgba(242, 164, 245, 0.2),
+          transparent
+        );
+      }
+      .guest-message {
+        position: absolute;
+        bottom: 10%;
+        width: 100%;
+        text-align: center;
+        z-index: 10;
+      }
+      .guest-message h2 {
+        color: var(--accent-color);
+        font-size: 2rem;
+      }
+      .guest-link {
+        color: var(--text-color);
+        text-decoration: none;
+        border-bottom: 2px solid var(--accent-color);
+      }
+
       .watchlist-layout {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -19,19 +82,12 @@
         border: 1px solid var(--border-color);
         min-height: 500px;
       }
-
-      movie-card {
-        display: block;
-        margin-bottom: 10px;
-      }
-
       .column-header {
         margin-bottom: 25px;
         padding-bottom: 12px;
         border-bottom: 2px solid var(--accent-color);
         font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 1.5px;
         display: flex;
         justify-content: space-between;
       }
@@ -41,7 +97,6 @@
         margin-top: 15px;
         justify-content: center;
       }
-
       .action-btn {
         background: rgba(255, 255, 255, 0.08);
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -50,7 +105,6 @@
         border-radius: 20px;
         cursor: pointer;
         font-size: 11px;
-        transition: 0.3s;
       }
       .action-btn.move {
         background: var(--accent-color);
@@ -58,11 +112,6 @@
         font-weight: bold;
         border: none;
       }
-      .action-btn:hover {
-        transform: scale(1.05);
-        filter: brightness(1.2);
-      }
-
       @media (max-width: 900px) {
         .watchlist-layout {
           grid-template-columns: 1fr;
@@ -71,30 +120,33 @@
     </style>
   </head>
   <body>
-    <div id="app-loader">
-      <div class="loader-wrapper">
-        <div class="logo-part">
-          <img src="/js/data/img/logo.png" alt="Logo" class="loader-img" />
-        </div>
-        <div class="text-part">Movie Tracker</div>
-      </div>
-    </div>
     <div id="header-container"></div>
     <div id="page">
-      <main class="movies-container favorites-page">
-        <div class="favorites-title-container">
-          <div class="content">
-            <p>Twoja Watchlista</p>
+      <div id="guest-view" class="hidden">
+        <section class="carousel-section">
+          <div id="drag-container">
+            <div id="spin-container"></div>
+            <div id="ground"></div>
           </div>
+        </section>
+        <div class="guest-message">
+          <h2>
+            <a href="/pages/account.html" class="guest-link">Zaloguj się</a>,
+            aby zarządzać swoją watchlistą
+          </h2>
+        </div>
+      </div>
+
+      <main id="auth-view" class="movies-container favorites-page hidden">
+        <div class="favorites-title-container">
+          <div class="content"><p>Twoja Watchlista</p></div>
           <div class="blob"></div>
         </div>
-
         <div class="container watchlist-layout">
           <div class="watchlist-column">
             <div class="column-header"><span>Do obejrzenia</span></div>
             <div id="pending-grid" class="movies-grid"></div>
           </div>
-
           <div class="watchlist-column">
             <div class="column-header"><span>Obejrzane</span></div>
             <div id="watched-grid" class="movies-grid"></div>
