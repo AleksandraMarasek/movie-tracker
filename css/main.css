@@ -121,15 +121,11 @@ header.main-header {
   position: absolute;
   inset: 0;
   margin: auto;
-
   width: 60px;
   height: 60px;
   border-radius: 50%;
   border: none;
-
-  /* background: rgba(0, 0, 0, 0.5); */
   cursor: pointer;
-
   transform: scale(0);
   transition: 0.3s ease;
   background: var(--surface-strong);
@@ -139,7 +135,6 @@ header.main-header {
   display: block;
   width: 40%;
   height: 2px;
-  /* background: white; */
   margin: 6px auto;
   transform: scaleX(0);
   transition: 0.6s ease;
@@ -182,11 +177,9 @@ header.sticky #openmenu span {
 }
 
 #search-input {
-  /* background: #141414; */
   border: 1px solid var(--border-color);
   padding: 12px 20px;
   border-radius: 30px;
-  /* color: white; */
   width: 280px;
   background: var(--input-bg);
   color: var(--text-color);
@@ -213,7 +206,6 @@ header.sticky #openmenu span {
   font-size: 16px;
   font-weight: 700;
   color: #fff;
-  /* background: #000; */
   overflow: hidden;
   cursor: pointer;
   z-index: 0;
