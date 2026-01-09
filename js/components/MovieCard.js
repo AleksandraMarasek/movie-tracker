@@ -65,10 +65,22 @@ class MovieCard extends HTMLElement {
         const description = this.getAttribute('description') || '';
         const poster = this.getAttribute('poster') || '';
 
+        const posterMedium = this.getAttribute('poster') || '';
+        const posterOriginal =
+            this.getAttribute('poster-original') || posterMedium;
+
         const fav = isFavorite(this.movieId);
 
         this.shadowRoot.innerHTML = `
       <style>
+        img { 
+          width: 100%; 
+          border-radius: 8px; 
+          aspect-ratio: 2/3; 
+          object-fit: cover;
+          background: #222; 
+        }
+
         .card {
           width: 200px;
           font-family: 'Segoe UI', sans-serif;
@@ -80,6 +92,7 @@ class MovieCard extends HTMLElement {
           flex-direction: column;
           height: 100%;
         }
+
         .card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); }
         img { width: 100%; border-radius: 8px; aspect-ratio: 2/3; object-fit: cover; }
         h3 { font-size: 16px; margin: 10px 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -106,7 +119,13 @@ class MovieCard extends HTMLElement {
       </style>
 
       <div class="card">
-        <img src="${poster}" alt="${title}">
+        <img 
+          src="${posterMedium}" 
+          srcset="${posterMedium} 210w, ${posterOriginal} 680w"
+          sizes="(max-width: 600px) 150px, 210px"
+          alt="${title}"
+          loading="lazy" 
+        >
         <h3 title="${title}">${title}</h3>
         <p class="rating">⭐ ${rating}</p>
         <p class="desc">${description}</p>

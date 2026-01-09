@@ -12,7 +12,16 @@
     <main class="shell">
       <header class="topbar">
         <div class="topbar__left">
-          <img class="topbar__logo" src="../js/data/img/logo.png" alt="Logo" />
+          <picture>
+            <source srcset="../js/data/img/logo.avif" type="image/avif" />
+            <source srcset="../js/data/img/logo.webp" type="image/webp" />
+            <img
+              class="topbar__logo"
+              src="../js/data/img/logo.png"
+              alt="Logo"
+              loading="eager"
+            />
+          </picture>
           <div class="topbar__text">
             <div class="topbar__title">Konto</div>
             <div class="topbar__sub">Profil użytkownika</div>
